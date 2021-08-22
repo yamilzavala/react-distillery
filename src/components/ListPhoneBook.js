@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import shortid from "shortid";
+import Context from "../store/bookePhone-context";
+import classes from './ListPhoneBook.module.css'
 
 const fields = ["name", "lastName", "phone"];
 
-export default function ListPhoneBook({ data }) {
-  const [localData, setLocalData] = useState([]);
+export default function ListPhoneBook() {
   const [sorting, setSorting] = useState(false);
   const [filterData, setFiterData] = useState("");
-
-  useEffect(() => {
-    setLocalData(data);
-  }, [data]);
+  const phoneBookContext = useContext(Context);
 
   function handleSorting(fieldName) {
     setSorting((state) => !state);
@@ -22,7 +20,7 @@ export default function ListPhoneBook({ data }) {
   }
 
   function ascendentOrden(fieldName) {
-    localData.sort((a, b) => {
+    phoneBookContext.localData.sort((a, b) => {
       if (a[fieldName].toLowerCase() > b[fieldName].toLowerCase()) {
         return 1;
       } else if (a[fieldName].toLowerCase() < b[fieldName].toLowerCase()) {
@@ -34,7 +32,7 @@ export default function ListPhoneBook({ data }) {
   }
 
   function descendentOrden(fieldName) {
-    localData.sort((a, b) => {
+    phoneBookContext.localData.sort((a, b) => {
       if (a[fieldName].toLowerCase() < b[fieldName]) {
         return 1;
       } else if (a[fieldName].toLowerCase() > b[fieldName].toLowerCase()) {
@@ -53,8 +51,22 @@ export default function ListPhoneBook({ data }) {
     });
   }
 
+  let content = '';
+  if (phoneBookContext && phoneBookContext.localData) {
+      content = filterValues(phoneBookContext.localData, filterData).map((item) => (
+        <tr key={shortid.generate()}>
+          <td>{item.name}</td>
+          <td>{item.lastName}</td>
+          <td>{item.phone}</td>
+        </tr>
+      ));
+  } else {
+      content = <div>There are no data to show!</div>
+  }
+
   return (
     <>
+    <hr/>
       Filter:
       <input
         type="text"
@@ -63,7 +75,7 @@ export default function ListPhoneBook({ data }) {
           setFiterData(e.target.value);
         }}
       />
-      <table>
+      <table className={classes.listPhoneData}>
         <thead>
           <tr>
             {fields.map((field) => (
@@ -74,13 +86,7 @@ export default function ListPhoneBook({ data }) {
           </tr>
         </thead>
         <tbody>
-          {filterValues(localData, filterData).map((item) => (
-            <tr key={shortid.generate()}>
-              <td>{item.name}</td>
-              <td>{item.lastName}</td>
-              <td>{item.phone}</td>
-            </tr>
-          ))}
+          {content}
         </tbody>
       </table>
     </>

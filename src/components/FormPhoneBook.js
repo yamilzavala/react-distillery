@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import Context from "../store/bookePhone-context";
 
-export default function FormPhoneBook(props) {
+export default function FormPhoneBook() {
   const [nameState, setNameState] = useState("");
   const [lastNameState, setLastNameState] = useState("");
   const [phoneState, setPhoneState] = useState("");
+  const phoneBookContext = useContext(Context);
 
   function handleOnSubmit(e) {
     e.preventDefault();
@@ -12,11 +14,12 @@ export default function FormPhoneBook(props) {
       lastName: lastNameState.toLowerCase(),
       phone: phoneState,
     };
-    props.data(formData);
+    phoneBookContext.addPhoneBook(formData);
   }
 
   return (
     <>
+      <h4>Add phone data</h4>
       <form onSubmit={handleOnSubmit}>
         <div>
           <label htmlFor="name">Name</label>

@@ -4,16 +4,16 @@ import ListPhoneBook from './components/ListPhoneBook';
 import {useState} from 'react';
 
 function App() {
-  const [formState, setFormState] = useState([]);
+  //const [formState, setFormState] = useState([]);
 
-  function handleFormData(e) {
-        setFormState([...formState, e])
-  }
+  // function handleFormData(e) {
+  //       setFormState([...formState, e])
+  // }
 
   return (
     <div className="App">
-      <FormPhoneBook data={handleFormData}/>
-      <ListPhoneBook data={formState}/>
+      <FormPhoneBook/>
+      <ListPhoneBook/>
     </div>
   );
 }
